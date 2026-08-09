@@ -1,0 +1,57 @@
+# ===================
+# Dependencias
+# ===================
+
+node_modules/
+venv/
+.venv/
+
+# ===================
+# Secrets — NUNCA subir a GitHub
+# ===================
+
+.env
+.env.local
+*.pem
+*.key*
+*credentials.json*
+**.secret
+**secrets/
+**id_rsa
+*id_ed25519*
+
+# ===================
+# Terraform (importante en DevOps)
+# ===================
+
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# ===================
+# OS / Editor
+# ===================
+
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# ===================
+# Build + Logs
+# ===================
+
+dist/
+build/
+*.log
+*.tmp
+*.tar.gz
+*.zip
+
+# ===================
+# Scratch de labs (NO versionar el espacio de trabajo de los labs)
+# ===================
+
+**/labs/.run/
