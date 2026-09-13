@@ -1,0 +1,6 @@
+services:
+  app:
+    build: .
+    container_name: level1-app
+    ports:
+      - "5000:5000"
