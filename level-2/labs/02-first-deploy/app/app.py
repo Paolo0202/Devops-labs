@@ -1,0 +1,15 @@
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import socket
+
+BODY = f"<h1>Hello from Kubernetes!</h1><p><b>Pod:</b> {socket.gethostname()}</p>".encode()
+
+class H(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(BODY)))
+        self.end_headers()
+        self.wfile.write(BODY)
+    def log_message(self, *a): pass
+
+HTTPServer(("0.0.0.0", 5000), H).serve_forever()
