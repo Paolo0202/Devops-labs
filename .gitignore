@@ -1,1 +1,9 @@
 node_modules/
+# Python
+.venv/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+level-3/labs/.run/
