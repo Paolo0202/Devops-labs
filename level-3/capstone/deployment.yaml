@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-s3-app
+  labels:
+    app: flask-s3
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-s3
+  template:
+    metadata:
+      labels:
+        app: flask-s3
+    spec:
+      containers:
+      - name: flask
+        image: flask-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5001
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds
+              key: access-key-id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds
+              key: secret-access-key
+        - name: S3_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds
+              key: bucket
+        - name: S3_ENDPOINT
+          value: "https://s3.amazonaws.com"
+        - name: BACKEND_URL
+          valueFrom:
+            secretKeyRef:
+              name: aws-creds
+              key: backend-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-s3-app
+spec:
+  selector:
+    app: flask-s3
+  ports:
+  - port: 5001
+    targetPort: 5001
+  type: NodePort
+      
