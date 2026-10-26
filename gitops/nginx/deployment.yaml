@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-gitops
+  labels:
+    app: nginx-gitops
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-gitops
+  template:
+    metadata:
+      labels:
+        app: nginx-gitops
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:stable
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-gitops
+spec:
+  selector:
+    app: nginx-gitops
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
