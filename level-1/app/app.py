@@ -14,4 +14,3 @@ if __name__ == "__main__":
 
 
 # CI/CD: prueba del workflow de publicacion de imagen Docker.
-
