@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flask
-          image: ghcr.io/paolo0202/devops-labs-flask-app:latest
+          image: ghcr.io/paolo0202/devops-labs-flask-app:9545f0cf31d48a5efcab729afd09b517d3e60077
           ports:
             - containerPort: 5000
 ---
