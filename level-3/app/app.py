@@ -2,8 +2,10 @@ import os
 import json
 import boto3
 from flask import Flask, request, jsonify, render_template_string
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
 
 # Configuración S3
 S3_ENDPOINT = os.environ.get("S3_ENDPOINT", "http://localhost:5000")
@@ -101,5 +103,4 @@ def health():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
-      
+    app.run(host="0.0.0.0", port=5001, debug=True, use_reloader=False)
