@@ -1,0 +1,55 @@
+name: Trivy Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 8 * * 1"
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  scan-image:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: level-1/app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t flask-app:scan .
+
+      - name: Scan image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: flask-app:scan
+          format: sarif
+          output: trivy-results.sarif
+          severity: HIGH,CRITICAL
+          exit-code: 1
+
+      - name: Upload results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+
+  scan-iac:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan Terraform
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: config
+          scan-ref: level-4/
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: 1
