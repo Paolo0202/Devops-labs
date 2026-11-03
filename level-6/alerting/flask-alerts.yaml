@@ -1,0 +1,37 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: flask-app-alerts
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  groups:
+  - name: flask-app
+    rules:
+    - alert: HighErrorRate
+      expr: sum(rate(flask_http_request_total{status=~"5.."}[5m])) * 100 > 10
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Tasa de errores alta en Flask app"
+        description: "La tasa de errores 5xx es {{ $value }}% en los ultimos 5 minutos."
+
+    - alert: FlaskAppDown
+      expr: up{job="flask-app"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Flask app no responde"
+        description: "El target {{ $labels.instance }} lleva {{ $value }}s caido."
+
+    - alert: HighLatency
+      expr: histogram_quantile(0.99, rate(flask_http_request_duration_seconds_bucket[5m])) > 2
+      for: 3m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Latencia alta en Flask app"
+        description: "p99 de latencia es {{ $value }}s (umbral: 2s)."
