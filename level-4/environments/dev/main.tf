@@ -12,12 +12,12 @@ provider "aws" {
 }
 
 module "vpc" {
-  source   = "../modules/vpc-minimal"
+  source   = "../../modules/vpc-minimal"
   vpc_cidr = "10.10.0.0/16"
 }
 
 module "app_bucket" {
-  source        = "../modules/s3-bucket"
+  source        = "../../modules/s3-bucket"
   bucket_name   = "dev-bootcamp-app-data-ypb"
   force_destroy = false
 }
