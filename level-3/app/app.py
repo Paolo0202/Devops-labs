@@ -10,16 +10,18 @@ metrics = PrometheusMetrics(app)
 # Configuración S3
 S3_ENDPOINT = os.environ.get("S3_ENDPOINT", "http://localhost:5000")
 S3_BUCKET = os.environ.get("S3_BUCKET", "devops-bootcamp-1792292801")
-AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY_ID", "test")
-AWS_SECRET_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "test")
 
-s3 = boto3.client(
-    "s3",
-    endpoint_url=S3_ENDPOINT,
-    aws_access_key_id=AWS_ACCESS_KEY,
-    aws_secret_access_key=AWS_SECRET_KEY,
-    region_name="us-east-1",
-)
+if S3_ENDPOINT:
+    s3 = boto3.client(
+        "s3",
+        endpoint_url=S3_ENDPOINT,
+        region_name="us-east-1",
+    )
+else:
+    s3 = boto3.client(
+        "s3",
+        region_name="us-east-1",
+    )
 
 HTML = """
 <!DOCTYPE html>

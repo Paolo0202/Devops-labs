@@ -7,3 +7,4 @@ node_modules/
 *.tfstate
 *.tfstate.*
 level-3/labs/.run/
+__pycache__/
