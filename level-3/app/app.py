@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify, render_template_string
 from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+APP_VERSION = "2.0-cicd-test"
 metrics = PrometheusMetrics(app)
 
 # Configuración S3
@@ -28,6 +29,7 @@ HTML = """
 <html>
 <body>
   <h1>📦 Flask + S3</h1>
+  <p>Version: {{ version }}</p>
   <p>Bucket: <code>{{ bucket }}</code></p>
   <h2>Subir archivo</h2>
   <form method="POST" enctype="multipart/form-data">
@@ -58,7 +60,7 @@ def index():
         objects = [obj["Key"] for obj in response.get("Contents", [])]
     except Exception:
         objects = []
-    return render_template_string(HTML, bucket=S3_BUCKET, objects=objects)
+    return render_template_string(HTML, bucket=S3_BUCKET, objects=objects, version=APP_VERSION)
 
 
 @app.route("/", methods=["POST"])
