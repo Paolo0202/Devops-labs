@@ -1,0 +1,69 @@
+name: Capstone Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "level-3/app/**"
+      - "level-7/terraform/**"
+      - ".github/workflows/capstone-deploy.yml"
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: devops-capstone-flask
+
+jobs:
+  deploy:
+    name: Build and Deploy Capstone
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: level-7/terraform
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::181259113150:role/GitHubActionsCapstoneRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.16.5
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Create ECR repository
+        run: terraform apply -target=aws_ecr_repository.flask -auto-approve -input=false
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image
+        working-directory: level-3/app
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t "$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
+          docker push "$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Terraform Apply
+        working-directory: level-7/terraform
+        run: |
+          terraform apply \
+            -auto-approve \
+            -input=false \
+            -var="image_tag=${{ github.sha }}"
