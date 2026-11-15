@@ -84,9 +84,15 @@ Buckets S3 conservados:
 
 ## 6. Costos y horas de práctica
 
-- Horas de práctica: pendiente de calcular.
-- Costo total aproximado: pendiente de consultar en AWS Billing.
-- Créditos restantes: pendiente de consultar.
+- Período de práctica: julio–noviembre de 2026.
+- Horas de práctica: no registradas; dedicación flexible según disponibilidad personal.
+- Costos registrados en AWS Cost Explorer:
+  - Octubre de 2026: -USD 0,0000002405.
+  - Noviembre de 2026 (hasta el día 15): -USD 0,0000000014.
+- Créditos AWS al 15/11/2026:
+  - Saldo restante total: USD 102,25.
+  - Saldo restante total estimado: USD 86,16.
+  - Dos créditos activos.
 
 ## 7. Lecciones aprendidas
 
